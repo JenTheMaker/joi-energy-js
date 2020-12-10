@@ -27,6 +27,8 @@ const populateRandomElectricityReadings = () => {
     })
 }
 
+// TODO name unit rate as variables 
+// TODO peak time multipliers 
 const populatePricePlans = () => {
     let pricePlans = [
         new PricePlan(MOST_EVIL_PRICE_PLAN_ID, DR_EVILS_DARK_ENERGY_ENERGY_SUPPLIER, 10),

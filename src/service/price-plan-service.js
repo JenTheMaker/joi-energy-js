@@ -11,7 +11,8 @@ class PricePlanService {
         this.electricityReadingService = new ElectricityReadingService()
     }
 
-    getListOfSpendAgainstEachPricePlanFor(smartMeterId) {
+    // TODO add limit argument, if limit then slice 
+    getListOfSpendAgainstEachPricePlanFor(smartMeterId, limit) {
         let readings = this.electricityReadingService.retrieveReadingsFor(smartMeterId)
         if (readings.length < 1) return []
         let average = this.calculateAverageReading(readings)
@@ -19,12 +20,26 @@ class PricePlanService {
         let consumedEnergy = average/timeElapsed
 
         let pricePlans = pricePlanRepository.get()
-        return this.cheapestPlansFirst(pricePlans).map(pricePlan => {
+        let sortedPricePlans =  this.cheapestPlansFirst(pricePlans).map(pricePlan => {
             let cost = {}
             cost[pricePlan.name] = consumedEnergy * pricePlan.unitRate
             return cost;
         })
+
+        if (validateLimit(limit)) {
+            return sortedPricePlans.slice(0, limit);
+        }
+        return sortedPricePlans;
+        
     }
+
+    validateLimit(limit) {
+        if (limit >= 1) {
+            return true;
+        }
+        return false;
+    }
+
 
     cheapestPlansFirst(pricePlans) {
         return pricePlans.sort((planA, planB) => planA.unitRate - planB.unitRate)

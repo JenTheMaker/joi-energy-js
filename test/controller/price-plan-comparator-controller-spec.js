@@ -69,6 +69,81 @@ describe('Price plan comparator controller' , () => {
     
     })
 
+    it ('Should recommend cheapest price plans with limit 2 for meter usage', () => {
+        const port = server.address().port
+        const agent = chai.request(`http://localhost:${port}`)
+
+        const readings = [
+            { "time": unixTimeOf('Jan 5 2020 10:30:00Z'), "reading": 35 },
+            { "time": unixTimeOf('Jan 5 2020 11:00:00Z'), "reading": 3 }
+        ];
+
+        const readingJson = {
+            "smartMeterId": "meter-103",
+            "electricityReadings": readings
+        }
+        return agent.post('/readings/store').send(readingJson).then((res) => {
+            return agent.get('/price-plans/recommend/meter-103/?limit=2').then((res) => {
+                expect(res.status).to.equal(200)
+                expect(res.body).to.eql([
+                    { "price-plan-2": 38 },
+                    { "price-plan-1": 76 }
+                ])
+            })
+        })
+    
+    })
+
+    it('Should recommend all cheapest price plans with limit greater than size', () => {
+        const port = server.address().port
+        const agent = chai.request(`http://localhost:${port}`)
+
+        const readings = [
+            { "time": unixTimeOf('Jan 5 2020 10:30:00Z'), "reading": 35 },
+            { "time": unixTimeOf('Jan 5 2020 11:00:00Z'), "reading": 3 }
+        ];
+
+        const readingJson = {
+            "smartMeterId": "meter-103",
+            "electricityReadings": readings
+        }
+        return agent.post('/readings/store').send(readingJson).then((res) => {
+            return agent.get('/price-plans/recommend/meter-103/?limit=10').then((res) => {
+                expect(res.status).to.equal(200)
+                expect(res.body).to.eql([
+                    { "price-plan-2": 38 },
+                    { "price-plan-1": 76 },
+                    { "price-plan-0": 380 }
+                ])
+            })
+        })
+    
+    })
+
+
+    it('Should recommend all cheapest price plans with limit is an invalid value', () => {
+        const port = server.address().port
+        const agent = chai.request(`http://localhost:${port}`)
+
+        const readings = [
+            { "time": unixTimeOf('Jan 5 2020 10:30:00Z'), "reading": 35 },
+            { "time": unixTimeOf('Jan 5 2020 11:00:00Z'), "reading": 3 }
+        ];
+
+        const readingJson = {
+            "smartMeterId": "meter-103",
+            "electricityReadings": readings
+        }
+        return agent.post('/readings/store').send(readingJson).then((res) => {
+            return agent.get('/price-plans/recommend/meter-103/?limit=A').then((res) => {
+                expect(res.status).to.equal(200)
+                expect(res.body).to.eql([
+                ])
+            })
+        })
+    
+    })
+
     let unixTimeOf = function(dateSpec) {
         return Math.floor(new Date(dateSpec) / 1000);
     }

@@ -22,10 +22,12 @@ router.get('/compare-all/:smartMeterId', function(req, res) {
     }
 })
 
-router.get('/recommend/:smartMeterId', function(req, res) {
-    const smartMeterId = req.params.smartMeterId
+// TODO add optional limit parameter * /:limit?
+router.get('/recommend/:smartMeterId/', function (req, res) {
+    const smartMeterId = req.params.smartMeterId;
+    const limit = req.query.limit;
     const pricePlanService = new PricePlanService()
-    const listOfSpendAgainstPricePlans = pricePlanService.getListOfSpendAgainstEachPricePlanFor(smartMeterId)
+    const listOfSpendAgainstPricePlans = pricePlanService.getListOfSpendAgainstEachPricePlanFor(smartMeterId, limit)
     res.status(200).send(listOfSpendAgainstPricePlans)    
 })
 module.exports = router

@@ -1,0 +1,54 @@
+JOI Energy helps customers decide on the best power supplier. w
+
+    Sarah - Smart Meter Id: "smart-meter-0", current power supplier: Dr Evil's Dark Energy.
+    Peter - Smart Meter Id: "smart-meter-1", current power supplier: The Green Eco.
+    Charlie - Smart Meter Id: "smart-meter-2", current power supplier: Dr Evil's Dark Energy.
+    Andrea - Smart Meter Id: "smart-meter-3", current power supplier: Power for Everyone.
+    Alex - Smart Meter Id: "smart-meter-4", current power supplier: The Green Eco.
+
+
+Currently generates 10 meters with 5 readings
+(meter-0 ... meter-9)
+TODO:
+Currently the limit is not being used
+Not allow storing reading for exisiting times
+Peak Time Multipliers not in use, currently undefined (missing argument)
+
+Current Tests:
+
+Electricity reading controller
+    ✓ Should successfully add the reading against new smart meter id (74ms)
+    ✓ Should successfully add the reading against existing smart meter id (45ms)
+    ✓ Should respond with error if smart meter id not set
+    ✓ Should respond with error if electricity readings not set
+
+  Price plan comparator controller
+    ✓ Should get costs against all price plans
+    ✓ Should recommend cheapest price plans no limit for meter usage
+
+  Price Plan
+    ✓ Should return the base price given an off peak date time
+    ✓ Should return a peak price given a datetime matching peak day
+
+  Electricity Reading Generator
+    ✓ Should generate electricity readings
+    ✓ Should return two digit number for single digit number
+    ✓ Should return two digit number for two digit number
+
+  Electricity Reading Repository
+    ✓ Should have new entry when new smart meter id is given
+    ✓ Should add usage data against smart meter id if it already exists
+
+  Electricity Reading Service
+    ✓ Should call repository to store readings
+    ✓ Should throws exception when invalid json sent
+    ✓ Should throws exception when invalid json sent
+    ✓ Should throws exception when invalid json sent
+    ✓ Should throws exception when invalid json sent
+    ✓ Should throws exception when invalid json sent
+
+  Price Plan Service
+    ✓ Should calculate costs against all price plans
+
+  Time Converter
+    ✓ Should calculate elapsed time in hours from two unix timestamps

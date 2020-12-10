@@ -9,6 +9,7 @@ class PricePlan {
         this.peakTimeMultipliers = peakTimeMultipliers
     }
 
+    // find multiplier for that day, otherwise default as unit rate
     getPrice(dateTime) {
         let peakMultiplier = this.peakTimeMultipliers.find(multiplier => {
             return multiplier.day === dateTime.getDay()
